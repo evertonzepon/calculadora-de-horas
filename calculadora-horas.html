@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Diferença de Horas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .calculator-container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #333;
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .theme-toggle {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: scale(1.1);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        input[type="time"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="time"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-title {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .example {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .example-title {
+            color: #1976d2;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .example-text {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            border-left-color: #f44336;
+        }
+
+        @media (max-width: 600px) {
+            .calculator-container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        body.dark-mode .calculator-container {
+            background: rgba(30, 30, 50, 0.95);
+            color: #e0e0e0;
+        }
+
+        body.dark-mode h1 {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode label {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode input[type="time"] {
+            background: #2a2a40;
+            border-color: #404060;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode input[type="time"]:focus {
+            background: #353550;
+            border-color: #667eea;
+        }
+
+        body.dark-mode .result-container {
+            background: #2a2a40;
+            border-left-color: #667eea;
+        }
+
+        body.dark-mode .result-title {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .result-value {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="header">
+            <h1>⏰ Calculadora de Horas</h1>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </div>
+        
+        <div class="input-group">
+            <label for="horaInicial">Hora Inicial:</label>
+            <input type="time" id="horaInicial" required>
+        </div>
+        
+        <div class="input-group">
+            <label for="horaFinal">Hora Final:</label>
+            <input type="time" id="horaFinal" required>
+        </div>
+        
+        <button class="calculate-btn" onclick="calcularDiferenca()">
+            Calcular Diferença
+        </button>
+        
+        <div class="result-container" id="resultado" style="display: none;">
+            <div class="result-title">Tempo de Atendimento:</div>
+            <div class="result-value" id="resultadoValor"></div>
+        </div>
+        
+
+    </div>
+
+    <script>
+        function calcularDiferenca() {
+            const horaInicial = document.getElementById('horaInicial').value;
+            const horaFinal = document.getElementById('horaFinal').value;
+            const resultadoDiv = document.getElementById('resultado');
+            const resultadoValor = document.getElementById('resultadoValor');
+            
+            // Verificar se ambos os campos foram preenchidos
+            if (!horaInicial || !horaFinal) {
+                resultadoDiv.style.display = 'block';
+                resultadoDiv.className = 'result-container error';
+                resultadoValor.textContent = 'Por favor, preencha ambos os horários';
+                return;
+            }
+            
+            // Converter strings de tempo para objetos Date
+            const [horaIni, minIni] = horaInicial.split(':').map(Number);
+            const [horaFim, minFim] = horaFinal.split(':').map(Number);
+            
+            // Criar objetos Date para hoje com os horários especificados
+            const dataInicial = new Date();
+            dataInicial.setHours(horaIni, minIni, 0, 0);
+            
+            const dataFinal = new Date();
+            dataFinal.setHours(horaFim, minFim, 0, 0);
+            
+            // Se a hora final for menor que a inicial, assumir que passou para o próximo dia
+            if (dataFinal < dataInicial) {
+                dataFinal.setDate(dataFinal.getDate() + 1);
+            }
+            
+            // Calcular a diferença em milissegundos
+            const diferencaMs = dataFinal - dataInicial;
+            
+            // Converter para horas e minutos
+            const diferencaMinutos = Math.floor(diferencaMs / (1000 * 60));
+            const horas = Math.floor(diferencaMinutos / 60);
+            const minutos = diferencaMinutos % 60;
+            
+            // Formatar o resultado
+            let resultado = '';
+            if (horas > 0) {
+                resultado += `${horas} hora${horas !== 1 ? 's' : ''}`;
+                if (minutos > 0) {
+                    resultado += ` e ${minutos} minuto${minutos !== 1 ? 's' : ''}`;
+                }
+            } else {
+                resultado = `${minutos} minuto${minutos !== 1 ? 's' : ''}`;
+            }
+            
+            // Exibir o resultado
+            resultadoDiv.style.display = 'block';
+            resultadoDiv.className = 'result-container';
+            resultadoValor.textContent = resultado;
+            
+            // Adicionar animação suave
+            resultadoDiv.style.opacity = '0';
+            setTimeout(() => {
+                resultadoDiv.style.transition = 'opacity 0.3s ease';
+                resultadoDiv.style.opacity = '1';
+            }, 10);
+        }
+        
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            body.classList.toggle('dark-mode');
+            
+            // Alterar o ícone baseado no tema atual
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.textContent = '☀️';
+            } else {
+                themeIcon.textContent = '🌙';
+            }
+        }
+        
+        // Permitir calcular pressionando Enter
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calcularDiferenca();
+            }
+        });
+        
+        // Preencher exemplo automaticamente ao carregar a página
+        window.addEventListener('load', function() {
+            loadTheme(); // Carregar tema salvo
+            document.getElementById('horaInicial').value = '10:28';
+            document.getElementById('horaFinal').value = '15:32';
+        });
+    </script>
+</body>
+</html>
+
